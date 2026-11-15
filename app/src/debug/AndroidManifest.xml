@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 개발용 신호 확인 화면에서만 쓰는 권한과 화면. 디버그 빌드에만 들어가고 출시 빌드에는 없다. -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />
+    <uses-permission android:name="pleos.car.permission.CAR_INFO" />
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+    <uses-permission android:name="pleos.car.permission.FUSED_LOCATION" />
+    <!-- 시연 준비로 내비 목적지를 넣어 볼 때만 쓴다. 앱 본체는 경로를 바꾸지 않는다. -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+
+    <application>
+        <!-- 시연 준비용: 내비에 예시 목적지를 넣는다. adb broadcast로만 부른다. -->
+        <receiver android:name=".debug.DemoRouteReceiver" android:exported="true" />
+
+        <!-- 개발용 확인: 마이크 대신 녹음한 소리를 음성 인식에 넣어 가장 최근 운행의 메모로 적는다. adb broadcast로만 부른다. -->
+        <receiver android:name=".debug.DemoVoiceReceiver" android:exported="true" />
+
+        <!-- adb로만 연다. 런처에는 나오지 않는다. -->
+        <activity android:name=".debug.SignalCheckActivity" android:exported="true">
+            <meta-data android:name="distractionOptimized" android:value="true" />
+        </activity>
+    </application>
+</manifest>

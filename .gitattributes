@@ -1,0 +1,2 @@
+docs/sample/*.csv -text
+*.bat text eol=crlf

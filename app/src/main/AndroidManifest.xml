@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.automotive" android:required="true" />
+
+    <!-- Pleos Vehicle SDK: 조회 권한만 사용 (제어 권한 없음) -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />
+    <!-- NaviHelper: 현재 위치의 주소와 내비 목적지 이름 조회 -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <!-- TextToSpeech: 운행 완료 음성 안내 -->
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+    <!-- SpeechToText: 비고에 넣는 한 마디 음성 메모 -->
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+    <!-- 차량이 켜진 뒤 앱을 열지 않아도 기록을 시작 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 다른 앱(내비 등)이 화면을 차지한 동안에도 운행 기록을 잇는 포그라운드 서비스 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- 폰으로 받기: 사용자가 연 동안만 같은 네트워크의 폰에 내보낸 파일을 건넨다. 차량 밖 서버로는 보내지 않는다 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".AutoLogApp"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|density|keyboard|keyboardHidden">
+            <meta-data android:name="distractionOptimized" android:value="true" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".trip.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".trip.TripRecorderService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="차량 신호(기어, 계기판 거리, 운전석 도어)로 업무용 승용차 운행을 기록" />
+        </service>
+    </application>
+</manifest>
